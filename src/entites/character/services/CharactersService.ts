@@ -1,5 +1,5 @@
 import type { CharactersRepository } from "../repository/types";
-import { mapDtoToCharacter } from "../types";
+import { CharacterModel } from "@/entites/character/model/CharacterModel";
 
 export class CharactersService {
   constructor(private readonly repository: CharactersRepository) {}
@@ -9,6 +9,6 @@ export class CharactersService {
       options: { params: { name } },
     });
 
-    return mapDtoToCharacter(data);
+    return CharacterModel.mapDtoToCharacter(data);
   }
 }

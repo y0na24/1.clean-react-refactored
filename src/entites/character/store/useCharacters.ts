@@ -1,20 +1,22 @@
 import { useState } from "react";
+
 import type { CharactersService } from "../services/CharactersService";
 import { useDebounceValue } from "@/shared/lib/hooks/useDebounceValue";
 import { useAsync } from "@/shared/lib/hooks/useAsync";
-import { useFavorites } from "./useFavorites";
-import type { Character } from "../types";
-import type { CharactersFavoritesService } from "../services/CharactersFavoriteService";
+import { type Character } from "../model/types";
+import { CharactersFavoritesService } from "../services/CharactersFavoriteService";
+import { CharacterModel } from "../model/CharacterModel";
 
 export const useCharacters = (
   charactersService: CharactersService,
   charactersFavoritesService: CharactersFavoritesService,
+  characterModel: CharacterModel,
 ) => {
   const [query, setQuery] = useState("");
   const debouncedValue = useDebounceValue(query, 300);
 
   const {
-    data: characters,
+    data,
     isLoading: isCharactersLoading,
     isError: isCharactersError,
     setData,
@@ -23,23 +25,35 @@ export const useCharacters = (
     [debouncedValue],
   );
 
-  const setCharacters = (chars: Character[] | undefined) => {
-    setData(chars);
-  };
+  const characters = characterModel.syncCharacters(
+    charactersFavoritesService.getFavoriteIds(),
+    data,
+  );
+
+  const favoriteCharacters = characterModel.getFavoriteCharacters(characters);
 
   const setSearchQuery = (value: string) => {
     setQuery(value);
   };
 
-  const { toggleFavorite, clearFavorites, favoriteCharacters } = useFavorites(
-    characters,
-    setCharacters,
-    charactersFavoritesService,
-  );
+  const toggleFavorite = (id: Character["id"]) => {
+    charactersFavoritesService.toggleFavorite(id);
+
+    const updated = characterModel.toggleCharacter(characters, id);
+
+    setData(updated);
+  };
+
+  const clearFavorites = () => {
+    charactersFavoritesService.clearFavorites();
+
+    const updated = characterModel.clearCharacters(characters);
+
+    setData(updated);
+  };
 
   return {
     characters,
-    setCharacters,
     favoriteCharacters,
     isCharactersLoading,
     isCharactersError,

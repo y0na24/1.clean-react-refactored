@@ -1,4 +1,4 @@
-import { useCharactersCtx } from "@/entites/character/provider/CharactersProvider";
+import { useCharactersCtx } from "@/entites/character/store/CharactersProvider";
 import { CharactersCatalogFeature } from "@/features/charactersCatalogFeature/CharactersCatalogFeature";
 import {
   charactersCatalogInjector,
@@ -8,7 +8,6 @@ import {
 export function CharactersPage() {
   const {
     characters,
-    setCharacters,
     searchQuery,
     setSearchQuery,
     isCharactersError,
@@ -18,7 +17,6 @@ export function CharactersPage() {
 
   const deps: CharactersCatalogDeps = {
     characters,
-    setCharacters,
     isCharactersError,
     isCharactersLoading,
     toggleFavorite,

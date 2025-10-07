@@ -1,5 +1,5 @@
 import { CharacterList } from "@/entites/character/ui/CharacterList";
-import { useCharactersCtx } from "@/entites/character/provider/CharactersProvider";
+import { useCharactersCtx } from "@/entites/character/store/CharactersProvider";
 import { CharacterCard } from "@/entites/character/ui/CharacterCard";
 import { Button } from "@/shared/ui/button";
 
